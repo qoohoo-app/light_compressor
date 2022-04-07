@@ -181,6 +181,8 @@ class LightCompressorPlugin : FlutterPlugin, MethodCallHandler,
                 quality = quality,
                 frameRate = frameRate,
                 isMinBitrateCheckEnabled = isMinBitrateCheckEnabled,
+                videoHeight = 1280.0,
+                videoWidth = 720.0,
             )
 
         )

@@ -39,8 +39,8 @@ public struct LightCompressor {
     public init() {}
 
     private let MIN_BITRATE = Float(2000000)
-    private let MIN_HEIGHT = 640.0
-    private let MIN_WIDTH = 360.0
+    private let MIN_HEIGHT = 1280.0
+    private let MIN_WIDTH = 720.0
 
     /**
      * This function compresses a given [source] video file and writes the compressed video file at
