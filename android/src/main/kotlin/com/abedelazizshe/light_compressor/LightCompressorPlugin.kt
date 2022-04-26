@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -130,9 +131,13 @@ class LightCompressorPlugin : FlutterPlugin, MethodCallHandler,
         frameRate: Int?,
         isMinBitrateCheckEnabled: Boolean,
     ) {
+        val listUri = arrayListOf<Uri>()
+        listUri.add(Uri.parse(path))
         VideoCompressor.start(
-            srcPath = path,
-            destPath = destinationPath,
+            this.applicationContext,
+            listUri,
+            true,
+             destinationPath,
             listener = object : CompressionListener {
                 override fun onProgress(percent: Float) {
                     Handler(Looper.getMainLooper()).post {
@@ -140,9 +145,9 @@ class LightCompressorPlugin : FlutterPlugin, MethodCallHandler,
                     }
                 }
 
-                override fun onStart() {}
+                override fun onStart(size: Long) {}
 
-                override fun onSuccess() {
+                override fun onSuccess(size: Long, path: String?) {
                     result.success(
                         gson.toJson(
                             buildResponseBody(
