@@ -34,16 +34,14 @@ class LightCompressor {
   static const MethodChannel _channel = MethodChannel('light_compressor');
 
   /// A stream to listen to video compression progress
-  static const EventChannel _progressStream =
-      EventChannel('compression/stream');
+  static const EventChannel _progressStream = EventChannel('compression/stream');
 
   Stream<double>? _onProgressUpdated;
 
   /// Fires whenever the uploading progress changes.
   Stream<double> get onProgressUpdated {
-    _onProgressUpdated ??= _progressStream
-        .receiveBroadcastStream()
-        .map<double>((dynamic result) => result != null ? result : 0);
+    _onProgressUpdated ??=
+        _progressStream.receiveBroadcastStream().map<double>((dynamic result) => result != null ? result : 0);
     return _onProgressUpdated!;
   }
 
@@ -66,14 +64,14 @@ class LightCompressor {
   /// Gallery or not.
   Future<dynamic> compressVideo({
     required String path,
-    required String destinationPath,
+    String? destinationPath,
     required VideoQuality videoQuality,
     int? frameRate,
     bool isMinBitrateCheckEnabled = true,
     bool iosSaveInGallery = true,
   }) async {
-    final Map<String, dynamic> response = jsonDecode(await _channel
-        .invokeMethod<dynamic>('startCompression', <String, dynamic>{
+    final Map<String, dynamic> response =
+        jsonDecode(await _channel.invokeMethod<dynamic>('startCompression', <String, dynamic>{
       'path': path,
       'destinationPath': destinationPath,
       'videoQuality': videoQuality.toString().split('.').last,

@@ -59,7 +59,7 @@ public struct LightCompressor {
      */
 
     public func compressVideo(source: URL,
-                              destination: URL,
+                              destination: URL? = nil,
                               quality: VideoQuality,
                               frameRate: Int? = nil,
                               isMinBitrateCheckEnabled: Bool = true,
@@ -117,7 +117,16 @@ public struct LightCompressor {
         videoWriterInput.expectsMediaDataInRealTime = true
         videoWriterInput.transform = videoTrack.preferredTransform
 
-        let videoWriter = try! AVAssetWriter(outputURL: destination, fileType: AVFileType.mov)
+        var finalDestination : URL;
+        
+        if(destination == nil){
+            finalDestination = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString).mp4")
+            
+        } else {
+            finalDestination = destination!
+        }
+
+        let videoWriter = try! AVAssetWriter(outputURL: finalDestination, fileType: AVFileType.mov)
         videoWriter.add(videoWriterInput)
 
         // Setup video reader output
@@ -202,7 +211,7 @@ public struct LightCompressor {
                                         audioWriterInput.markAsFinished()
 
                                         videoWriter.finishWriting(completionHandler: {() -> Void in
-                                            completion(.onSuccess(destination))
+                                            completion(.onSuccess(finalDestination))
                                         })
 
                                     }
@@ -211,7 +220,7 @@ public struct LightCompressor {
                         }
                     } else {
                         videoWriter.finishWriting(completionHandler: {() -> Void in
-                            completion(.onSuccess(destination))
+                            completion(.onSuccess(finalDestination))
                         })
                     }
                 }
